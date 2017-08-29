@@ -13,7 +13,7 @@ _This project is under development and is still experimental_
 
 ### Demo
 
-See the examples
+[Live examples.](https://alexmnv.github.io/react-navtree/) See `examples` directory for source code.
 
 ### Installation
 
@@ -183,6 +183,8 @@ export default function Layout () {
 ReactDOM.render(<Layout tree={navTree} />)
 ```
 
+[Open the example above](https://alexmnv.github.io/react-navtree/basic/)
+
 ### Description
 
 The project consists of 2 main classes:
@@ -244,7 +246,7 @@ If not, the event is propagated up to the parent component. The component will l
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `func` | function (tree: NavTree) => string &#124; null &#124; false | | Navigation resolve function. |
+| `func` | function (event: any, tree: NavTree) => string &#124; null &#124; false | | Navigation resolve function. |
 | `tree` | NavTree | | Parent navigation tree. Should be set only on root component. |
 | `navId` | string | | ID used for the bound NavTree node.<br /> Must be unique within parent tree's direct nodes.<br /> If omitted, a numerical ID will be generated. |
 | `defaultFocused` | boolean | false | If set to `true`, the component will get focused after it's been mounted |
