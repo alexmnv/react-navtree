@@ -1,8 +1,0 @@
-.btn-back { background-color: #ccc; }
-.btn-back.nav-focused { outline: 1px solid crimson; }
-
-
-.button { display: inline-block; padding: 5px 10px; background-color: #cccccc; margin: 2px; }
-.button.nav-focused { box-shadow: 0 1px 3px #008CBA; outline: 1px solid #008CBA; background-color: #008CBA; color: #FFF; }
-
-code { background-color: #EEE; padding: 2px 4px; }
