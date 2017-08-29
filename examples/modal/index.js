@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Nav, {navHorizontal} from 'react-navtree'
 import Modal from './modal'
-import renderExample from './../renderExample'
+import renderExample from '../utils/renderExample'
 
 class Example extends Component {
   constructor (props) {

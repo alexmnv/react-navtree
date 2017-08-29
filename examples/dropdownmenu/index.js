@@ -1,5 +1,5 @@
 import React from 'react'
-import renderExample from './../renderExample'
+import renderExample from '../utils/renderExample'
 import Nav, {navVertical} from 'react-navtree'
 import Menu from './DropdownMenu'
 

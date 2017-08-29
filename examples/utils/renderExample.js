@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Nav, {NavTree, navVertical} from 'react-navtree'
-import './utils/common.css'
+import './common.css'
 
 export default function renderExample (ExampleComponent, showBackButton = true) {
   let navTree = new NavTree()
 
   function goBack () {
-    document.location = '../index/'
+    document.location = '../'
   }
 
   window.document.addEventListener('keydown', (e) => {

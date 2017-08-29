@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Nav, {navHorizontal} from 'react-navtree'
-import renderExample from './../renderExample'
-import examples from './../examples.json'
+import renderExample from './utils/renderExample'
+import examples from './examples.json'
 
-class Example extends React.PureComponent {
+class Index extends React.PureComponent {
   render () {
     function openExamplePage (id) {
-      document.location = '../' + id + '/'
+      document.location = `./${id}/`
     }
 
     return (<div>
@@ -26,11 +26,8 @@ class Example extends React.PureComponent {
   }
 }
 
-Example.propTypes = {
+Index.propTypes = {
   buttons: PropTypes.object
 }
 
-let buttons = examples
-delete buttons['index']
-
-renderExample(<Example buttons={buttons} />, false)
+renderExample(<Index buttons={examples} />, false)

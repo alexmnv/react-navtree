@@ -47,6 +47,18 @@ let config = {
 }
 
 //
+// Build index page
+//
+config.entry['index'] = path.join(__dirname, 'index.js')
+config.plugins.push(
+  new HtmlWebpackPlugin({
+    template: path.join(__dirname, 'utils', 'tpl.html'),
+    filename: 'index.html',
+    chunks: ['index', 'react', 'react-navtree']
+  })
+)
+
+//
 // Build examples
 //
 Object.keys(examples).forEach((exampleName) => {
@@ -56,7 +68,7 @@ Object.keys(examples).forEach((exampleName) => {
   // Generate separate HTML page for each example
   config.plugins.push(
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'tpl.html'),
+      template: path.join(__dirname, 'utils', 'tpl.html'),
       filename: path.join(exampleName, 'index.html'),
       chunks: [exampleName, 'react', 'react-navtree']
     })
