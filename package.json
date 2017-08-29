@@ -45,7 +45,7 @@
     "type": "git",
     "url": "git+https://github.com/alexmnv/react-navtree.git"
   },
-  "author": "Alexandr Motuzov",
+  "author": "Alexandr Motuzov <alexandr_nv@list.ru>",
   "keywords": [
     "navigation",
     "arrow navigation",

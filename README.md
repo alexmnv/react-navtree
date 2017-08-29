@@ -17,7 +17,9 @@ _This project is under development and is still experimental_
 
 ### Installation
 
-> todo
+```
+npm install react-navtree
+```
 
 ### Usage example
 
