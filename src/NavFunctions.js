@@ -1,3 +1,81 @@
+//
+// Dynamic navigation
+// (elements' position evaluated at run-time)
+//
+
+const getPos = function (el) {
+  el = el.getBoundingClientRect()
+  return {
+    left: el.left + window.scrollX,
+    right: el.right + window.scrollX,
+    top: el.top + window.scrollY,
+    bottom: el.bottom + window.scrollY
+  }
+}
+
+const getPoint = function (dir, pos) {
+  if (dir === 'left') return { x: pos.left, y: pos.top + ((pos.bottom - pos.top) / 2) } // left middle
+  else if (dir === 'right') return { x: pos.right, y: pos.top + ((pos.bottom - pos.top) / 2) } // right middle
+  else if (dir === 'top') return { x: pos.left + ((pos.right - pos.left) / 2), y: pos.top } // center top
+  else if (dir === 'bottom') return { x: pos.left + ((pos.right - pos.left) / 2), y: pos.bottom } // center bottom
+}
+
+const getDistance = function (pos1, pos2) {
+  let a = pos1.x - pos2.x
+  let b = pos1.y - pos2.y
+
+  return Math.sqrt(a * a + b * b)
+}
+
+/**
+ *
+ */
+export function navDynamic (key, navTree, focusedNode) {
+  if (key !== 'left' && key !== 'right' && key !== 'up' && key !== 'down') return false
+
+  let focusedEl
+  if (navTree.focusedNode !== null) {
+    focusedEl = navTree.nodes[navTree.focusedNode].el
+  } else if (focusedNode) {
+    focusedEl = focusedNode.el
+  }
+
+  let srcPoint = {left: 'left', right: 'right', up: 'top', down: 'bottom'}
+  let dstPoint = {left: 'right', right: 'left', up: 'bottom', down: 'top'}
+
+  let point = focusedEl ? getPoint(srcPoint[key], getPos(focusedEl)) : {x: 0, y: 0}
+
+  let minDistance = null
+  let minDistanceNode
+
+  // Loop over children nodes and find a node that is at minimum distance from previously focused element
+  navTree.nodesId.forEach(id => {
+    let node = navTree.nodes[id]
+    let el = node.el
+    if (el !== focusedEl) {
+      let elPoint = getPoint(dstPoint[key], getPos(el))
+
+      if ((key === 'left' && elPoint.x > point.x) ||
+        (key === 'right' && elPoint.x < point.x) ||
+        (key === 'up' && elPoint.y > point.y) ||
+        (key === 'down' && elPoint.y < point.y)) return
+
+      let distance = getDistance(point, elPoint)
+
+      if (minDistance === null || minDistance > distance) {
+        minDistance = distance
+        minDistanceNode = node
+      }
+    }
+  })
+
+  return minDistanceNode ? minDistanceNode.id : false
+}
+
+//
+// Fixed (static) navigation
+//
+
 const getValue = function (val, values, dir) {
   let pos = values.indexOf(val)
 

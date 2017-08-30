@@ -126,14 +126,15 @@ export default class NavTree {
   }
 
   _resolve (event, ctrl) {
-    let node = this.getFocusedNode(true) // get the deepest focused node
+    let deepestFocusedNode = this.getFocusedNode(true)
+    let node = deepestFocusedNode
 
     //
     // Phase 1
     // Traversing up the tree (up the focused path) until the event is resolved, starting from the deepest focused node
     //
     do {
-      let resolvedNode = this._getResolveFuncResult(node, event)
+      let resolvedNode = this._getResolveFuncResult(node, event, deepestFocusedNode)
       if (ctrl.break) return false
 
       if (resolvedNode) {
@@ -156,7 +157,7 @@ export default class NavTree {
     // Traversing down the tree as long as the event is resolved, starting from the last node from phase 1
     //
     while (true) {
-      let resolvedNode = this._getResolveFuncResult(node, event)
+      let resolvedNode = this._getResolveFuncResult(node, event, deepestFocusedNode)
       if (ctrl.break) return false
 
       if (resolvedNode) {
@@ -171,8 +172,8 @@ export default class NavTree {
     }
   }
 
-  _getResolveFuncResult (node, event) {
-    let resolveFuncResult = node.resolveFunc(event, node)
+  _getResolveFuncResult (node, event, deepestFocusedNode) {
+    let resolveFuncResult = node.resolveFunc(event, node, deepestFocusedNode)
 
     if (resolveFuncResult === null) {
       return node

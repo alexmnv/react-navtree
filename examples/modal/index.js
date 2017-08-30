@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Nav, {navHorizontal} from 'react-navtree'
+import Nav from 'react-navtree'
 import Modal from './modal'
 import renderExample from '../utils/renderExample'
 
@@ -17,7 +17,7 @@ class Example extends Component {
   render () {
     return (
       <div>
-        <Nav func={navHorizontal} navId='body'>
+        <Nav>
           <Nav func={this._navFuncToggleModal} className='button'>Press to show modal window #1</Nav>
           <Nav func={this._navFuncToggleModal} className='button'>Press to show modal window #2</Nav>
         </Nav>
@@ -30,7 +30,7 @@ class Example extends Component {
             <li>when the modal is closed, the previously focused component gets focused back</li>
           </ul>
 
-          <Nav func={navHorizontal}>
+          <Nav>
             <Nav func={this._navFuncToggleModal} defaultFocused className='button'>Agree</Nav>
             <Nav func={this._navFuncToggleModal} className='button'>OK</Nav>
             <Nav func={this._navFuncToggleModal} className='button'>Confirm</Nav>

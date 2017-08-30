@@ -14,9 +14,11 @@ body {width: 600px;}
 .tab-content { border-top: 1px solid #999; padding: 10px 5px 5px 5px; min-height: 100px; }
 
 /* Body */
-.nav-block.table { text-align: center }
-.nav-block.table > div { font-size: 0.9em; height: 20px; }
-.nav-block.table table { width: 100%; table-layout: fixed }
+.caption { font-size: 0.9em; height: 20px; text-align: center }
+.tbl { text-align: center }
+.tbl > * { display: inline-block; }
+.tbl.col3 > * { width: 33% }
+.tbl.col2 > * { width: 50% }
 
 /* Footer */
 .footer { background-color: #EEEEEE; padding: 10px; text-align: center }

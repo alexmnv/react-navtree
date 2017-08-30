@@ -1,7 +1,7 @@
 {
   "name": "react-navtree",
-  "version": "0.0.1",
-  "description": "Utility for making page navigation (using keyboard or TV Remote Control on STB/ Smart TV apps) React way",
+  "version": "0.0.2",
+  "description": "Library for making page navigation (using keyboard or TV Remote Control in STB/ Smart TV apps) React way",
   "main": "dist/index.js",
   "dependencies": {
     "prop-types": "^15.5.7"

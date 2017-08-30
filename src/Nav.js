@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import NavTree from './NavTree'
+import { navDynamic } from './NavFunctions'
 
 export default class Nav extends React.PureComponent {
   constructor (props) {
@@ -44,11 +45,12 @@ export default class Nav extends React.PureComponent {
     }
   }
 
-  resolveFunc (event, navTree) {
+  resolveFunc (event, navTree, focusedNode) {
     if (!this.props.func) {
-      return this.state.focused ? false : (navTree.nodesId.length > 0 ? navTree.nodesId[0] : null)
+      if (navTree.nodesId.length > 1) return navDynamic(event, navTree, focusedNode)
+      else return this.state.focused ? false : (navTree.nodesId.length > 0 ? navTree.nodesId[0] : null)
     } else {
-      return this.props.func(event, navTree)
+      return this.props.func(event, navTree, focusedNode)
     }
   }
 
@@ -72,7 +74,7 @@ export default class Nav extends React.PureComponent {
     }
 
     return (
-      <Component className={className} {...restProps}>{children}</Component>
+      <Component ref={ref => { if (this.tree) this.tree.el = ref }} className={className} {...restProps}>{children}</Component>
     )
   }
 }
