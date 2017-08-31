@@ -2,7 +2,7 @@
 
 Library for making page navigation (using keyboard or TV Remote Control in STB/ Smart TV apps) React way
 
-- Lightweight ( 7kb minified, 3 kb gzipped)
+- Lightweight ( 8 kb minified, 3 kb gzipped)
 - No dependencies (except for React itself)
 
 _This project is under development and is still experimental_
@@ -26,7 +26,7 @@ npm install --save react-navtree
 
 ### Usage example
 
-1) Initialize `NavTree` instance, which will serve as an entry point for key press events
+1) Initialize `NavTree` instance which will serve as an entry point for key press events
 
 ```js
 // At the bootstrap phase (before rendering the app):
@@ -157,7 +157,7 @@ class Footer extends React.PureComponent {
 }
 
 export default function Layout () {
-  return <Nav func={navVertical}>
+  return <Nav>
 
     <Header />
     <Body />
@@ -184,9 +184,8 @@ The project consists of 2 main classes:
 `NavTree` represents a tree structure reflecting React's node hierarchy of `<Nav>` components.
 It is accomplished by binding `<Nav>` components to the navigation tree at the mounting phase.
 When `<Nav>` component is mounted it creates a new branch in the tree. 
-This branch in its turn will serve as a parent tree to nodes `Nav` components through Reacts' `context` mechanism.
-Likewise when `<Nav>` component is unmounted the branch gets removed from the tree. 
-Thus keeping the tree in sync with React.
+This branch in its turn will serve as a parent tree to children `Nav` components through Reacts' `context` mechanism.
+Likewise, when `<Nav>` component is unmounted, the branch gets removed from the tree thus keeping the tree in sync with React.
 
 ##### Navigation
 
@@ -194,22 +193,20 @@ Navigation is performed by using `NavTree.focus(path)` or `NavTree.resolve(event
 
 **`NavTree.focus(path)`** is used for imperative navigation.
 
-**`NavTree.resolve(event)`** is used for resolving an event (key press) to a node that should be focused. 
-Each tree node must have so-called "resolve function" defined by user. When an event (key press) occurs, 
-
-
+**`NavTree.resolve(event)`** is used for resolving an event (key press) to a node that should be focused next. 
 
 ##### Navigation resolving
 
-Navigation resolving is a process of finding a node that should be focused according to an event and the previously focused node.
+_Navigation resolving_ is a process of finding a node that should be focused next when an event occurred.
 
-Each tree node must have so-called "resolve function" defined by user, which is responsible for managing focus transition within the node's direct nodes. 
+Each node in the navigation tree must have so-called "resolve function" that is responsible for finding a node that should receive focus according to an event and previously focused node.
 
+\* By default, if resolve function is not provided, `navDynamic` is used. 
 
 ###### Resolving process:
 
 1) Resolving Up: Starting at the deepest focused node, the event is propagated up the tree _until_ it is resolved. 
-2) Resolving Down: Starting at the last node in phase #1, the event is propagated down the tree _as long as_ it is resolved.
+2) Resolving Down: Starting at the resolved node in phase #1, the event is propagated down the tree _as long as_ it is resolved.
 3) Focus: The destination node (the last one in phase #2) gets focused. 
 
 \* event is resolved if the node's "resolve function" returns a child node ID or NULL (itself)
