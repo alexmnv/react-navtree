@@ -2,7 +2,7 @@
 
 Library for making page navigation (using keyboard or TV Remote Control in STB/ Smart TV apps) React way
 
-- Lightweight ( 8 kb minified, 3 kb gzipped)
+- Lightweight (8 kb minified, 3 kb gzipped)
 - No dependencies (except for React itself)
 
 _This project is under development and is still experimental_
@@ -11,7 +11,7 @@ _This project is under development and is still experimental_
 > In traditional approach, navigation logic is implemented outside 'View' layer and is tightly coupled with UI layout, which doesn't fit with React principles of reusable and independent components.
 > 
 > The idea is to make components' navigation logic encapsulated within themselves and independent of the layout the component is placed into.
-> `react-navtree` was designed to help make navigaton React way - declarative and reusable.
+> `react-navtree` was designed to help make navigation React way - declarative and reusable.
 
 
 ### Demo
@@ -26,7 +26,7 @@ npm install --save react-navtree
 
 ### Usage example
 
-1) Initialize `NavTree` instance which will serve as an entry point for key press events
+1) Initialize `NavTree` instance which will serve as an entry point for keypress events
 
 ```js
 // At the bootstrap phase (before rendering the app):
@@ -193,7 +193,7 @@ Navigation is performed by using `NavTree.focus(path)` or `NavTree.resolve(event
 
 **`NavTree.focus(path)`** is used for imperative navigation.
 
-**`NavTree.resolve(event)`** is used for resolving an event (key press) to a node that should be focused next. 
+**`NavTree.resolve(event)`** is used for resolving an event (keypress) to a node that should be focused next. 
 
 ##### Navigation resolving
 
@@ -203,7 +203,7 @@ Each node in the navigation tree must have so-called "resolve function" that is 
 
 \* By default, if resolve function is not provided, `navDynamic` is used. 
 
-###### Resolving process:
+###### Resolving process phases:
 
 1) Resolving Up: Starting at the deepest focused node, the event is propagated up the tree _until_ it is resolved. 
 2) Resolving Down: Starting at the resolved node in phase #1, the event is propagated down the tree _as long as_ it is resolved.
@@ -213,15 +213,15 @@ Each node in the navigation tree must have so-called "resolve function" that is 
 <br />
 \* if a node gets focused, all of his ascendants get focused as well
 
-###### From component's perspective:
+###### From component perspective:
 
-When an event (key press) occurs, first, the currently focused `<Nav>` component gets control of the process. 
+When an event (keypress) occurs, first, the currently focused `<Nav>` component gets control of the process. 
 The resolve function (passed as "func" property) gets called to determine if the component can resolve the event. 
 
 If so, the component stays focused and the event is propagated down to a child component returned by resolve function. 
 (If resolve function returns NULL, the component stays focused, but the focused child (if any) will lose focus)
 
-If not, the event is propagated up to the parent component. The component will lose focus if the event will eventually be resolved to a different component.
+If not, the event is propagated up to the parent component. The component will lose focus if the event is eventually resolved to a different component.
 
 ### API
 
@@ -229,12 +229,12 @@ If not, the event is propagated up to the parent component. The component will l
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `func` | function (event: any, tree: NavTree) => string &#124; null &#124; false | | Navigation resolve function. |
-| `tree` | NavTree | | Parent navigation tree. Should be set only on root component. |
+| `func` | function (event: any, tree: NavTree) => string &#124; null &#124; false | navDynamic | Navigation resolve function. |
+| `tree` | NavTree | obtained from context | Parent navigation tree. Should be set only on root component. |
 | `navId` | string | | ID used for the bound NavTree node.<br /> Must be unique within parent tree's direct nodes.<br /> If omitted, a numerical ID will be generated. |
 | `defaultFocused` | boolean | false | If set to `true`, the component will get focused after it's been mounted |
 | `onNav` | function (path: Array\<string\> &#124; false ) => void | | Navigation event callback |
-| `component` | node | 'div' |
+| `component` | string | 'div' | Wrapper element |
 | `focusedClass` | string | 'nav-focused' | CSS-class applied to focused component
 | `...` | | | All other properties are passed to the `component` node. |  
 
@@ -243,9 +243,9 @@ If not, the event is propagated up to the parent component. The component will l
 | Method | Arguments | Return value | Description |
 | --- | --- | --- | --- |
 | `focus(path)` | path: string &#124; Array\<string\> &#124; undefined | | Focuses a node specified by `path` argument. If omitted, the tree instance itself gets focused. |
-| `resolve(event)` | event: any | | Resolves the event so that the appropriate node gets focused |
+| `resolve(event)` | event: any | | Resolves the event so that the appropriate node gets focused. |
 | `addNode(id)` | id: string &#124; undefined | NavTree | Creates a new branch in the tree.<br/> If `id` is omitted, a numerical ID will be generated.<br/>`id` must be unique within the direct nodes of the tree. |
-| `removeNode(id)` | id: string | | |
+| `removeNode(id)` | id: string | | Removes the node from the tree |
 | `getNode(path)` | string &#124; Array\<string\> | NavTree &#124; null | Returns descendant node instance |
 | `getFocusedPath()` | | Array\<string\> | Returns descendant focused node's path |
  
@@ -253,7 +253,7 @@ If not, the event is propagated up to the parent component. The component will l
 | --- | --- | --- |
 | `nodes` | Object{ id: Navtree } | List of child nodes |
 | `nodesId` | Array\<string\> | Array of child nodes ID arranged in the order the nodes have been added |
-| `parent` | Navtree &#124; null  | parent node |
+| `parent` | Navtree &#124; null  | Parent node |
 | `focusedNode` | string &#124; null | ID of focused child node  |
 
 

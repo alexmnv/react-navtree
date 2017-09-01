@@ -95,7 +95,7 @@ Nav.propTypes = {
   navId: PropTypes.string,
   func: PropTypes.func,
   focusedClass: PropTypes.string,
-  component: PropTypes.node,
+  component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   tree: PropTypes.instanceOf(NavTree),
   onNav: PropTypes.func,
   defaultFocused: PropTypes.bool,

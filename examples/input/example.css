@@ -1,0 +1,6 @@
+
+.nav-input { padding: 10px; margin: 5px; border: 1px solid #ccc; background-color: #F9FFF9 }
+.nav-input.nav-focused { border-color: #008CBA; box-shadow: 0 1px 3px #008CBA; }
+.nav-input.nav-focused:focus { background-color: #FFFFFF; }
+
+.caption { font-weight: bold; margin-top: 15px; }
