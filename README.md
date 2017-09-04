@@ -201,7 +201,7 @@ _Navigation resolving_ is a process of finding a node that should be focused nex
 
 Each node in the navigation tree must have so-called "resolve function" that is responsible for finding a node that should receive focus according to an event and previously focused node.
 
-\* By default, if resolve function is not provided, `navDynamic` is used. 
+\* By default, `navDynamic` is used if the resolve function is not provided. 
 
 ###### Resolving process phases:
 
@@ -218,8 +218,8 @@ Each node in the navigation tree must have so-called "resolve function" that is 
 When an event (keypress) occurs, first, the currently focused `<Nav>` component gets control of the process. 
 The resolve function (passed as "func" property) gets called to determine if the component can resolve the event. 
 
-If so, the component stays focused and the event is propagated down to a child component returned by resolve function. 
-(If resolve function returns NULL, the component stays focused, but the focused child (if any) will lose focus)
+If so, the component stays focused and the event is propagated down to a child component returned by the resolve function. 
+(If the resolve function returns NULL, the component stays focused, but the focused child (if any) will lose focus)
 
 If not, the event is propagated up to the parent component. The component will lose focus if the event is eventually resolved to a different component.
 
@@ -229,7 +229,7 @@ If not, the event is propagated up to the parent component. The component will l
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `func` | function (event: any, tree: NavTree) => string &#124; null &#124; false | navDynamic | Navigation resolve function. |
+| `func` | function (event: any, node: NavTree, previouslyFocusedNode: NavTree) => string &#124; null &#124; false | navDynamic | Navigation resolve function. |
 | `tree` | NavTree | obtained from context | Parent navigation tree. Should be set only on root component. |
 | `navId` | string | | ID used for the bound NavTree node.<br /> Must be unique within parent tree's direct nodes.<br /> If omitted, a numerical ID will be generated. |
 | `defaultFocused` | boolean | false | If set to `true`, the component will get focused after it's been mounted |
