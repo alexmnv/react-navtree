@@ -74,7 +74,7 @@ export default class NavTree {
     if (Array.isArray(path)) {
       path = path.slice()
     } else {
-      path = Array.from(arguments)
+      path = [].slice.call(arguments)
     }
 
     // get the root node and full path to the target node
@@ -243,7 +243,7 @@ export default class NavTree {
    */
   getNode (path) {
     if (!Array.isArray(path)) {
-      path = Array.from(arguments)
+      path = [].slice.call(arguments)
     }
 
     let node = this

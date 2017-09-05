@@ -3,16 +3,6 @@
 // (elements' position evaluated at run-time)
 //
 
-const getPos = function (el) {
-  el = el.getBoundingClientRect()
-  return {
-    left: el.left + window.scrollX,
-    right: el.right + window.scrollX,
-    top: el.top + window.scrollY,
-    bottom: el.bottom + window.scrollY
-  }
-}
-
 const getPoint = function (dir, pos) {
   if (dir === 'left') return { x: pos.left, y: pos.top + ((pos.bottom - pos.top) / 2) } // left middle
   else if (dir === 'right') return { x: pos.right, y: pos.top + ((pos.bottom - pos.top) / 2) } // right middle
@@ -43,7 +33,7 @@ export function navDynamic (key, navTree, focusedNode) {
   let srcPoint = {left: 'left', right: 'right', up: 'top', down: 'bottom'}
   let dstPoint = {left: 'right', right: 'left', up: 'bottom', down: 'top'}
 
-  let point = focusedEl ? getPoint(srcPoint[key], getPos(focusedEl)) : {x: 0, y: 0}
+  let point = focusedEl ? getPoint(srcPoint[key], focusedEl.getBoundingClientRect()) : {x: 0, y: 0}
 
   let minDistance = null
   let minDistanceNode
@@ -53,7 +43,7 @@ export function navDynamic (key, navTree, focusedNode) {
     let node = navTree.nodes[id]
     let el = node.el
     if (el !== focusedEl) {
-      let elPoint = getPoint(dstPoint[key], getPos(el))
+      let elPoint = getPoint(dstPoint[key], el.getBoundingClientRect())
 
       if ((key === 'left' && elPoint.x > point.x) ||
         (key === 'right' && elPoint.x < point.x) ||
