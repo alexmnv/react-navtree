@@ -3,13 +3,44 @@
 // (elements' position evaluated at run-time)
 //
 
-const getPoint = function (dir, pos) {
-  if (dir === 'left') return { x: pos.left, y: pos.top + ((pos.bottom - pos.top) / 2) } // left middle
-  else if (dir === 'right') return { x: pos.right, y: pos.top + ((pos.bottom - pos.top) / 2) } // right middle
-  else if (dir === 'top') return { x: pos.left + ((pos.right - pos.left) / 2), y: pos.top } // center top
-  else if (dir === 'bottom') return { x: pos.left + ((pos.right - pos.left) / 2), y: pos.bottom } // center bottom
+/**
+ * Get element position
+ * @param el
+ * @returns {ClientRect|null}
+ */
+const getElRect = function (el) {
+  let rect = el.getBoundingClientRect()
+  if (rect.width === 0 && rect.height === 0) return null // element is not visible
+  return rect
 }
 
+/**
+ * Get center point of a rectangle. The points are used to compare distance between elements.
+ *          up
+ *      ┌────*────┐
+ *      │         │
+ * left *         * right
+ *      │         │
+ *      └────*────┘
+ *          down
+ *
+ * @param side
+ * @param rect {ClientRect}
+ * @returns {{x, y}}
+ */
+const getCenterPoint = function (side, rect) {
+  if (side === 'left') return { x: rect.left, y: rect.top + ((rect.bottom - rect.top) / 2) }
+  else if (side === 'right') return { x: rect.right, y: rect.top + ((rect.bottom - rect.top) / 2) }
+  else if (side === 'up') return { x: rect.left + ((rect.right - rect.left) / 2), y: rect.top }
+  else if (side === 'down') return { x: rect.left + ((rect.right - rect.left) / 2), y: rect.bottom }
+}
+
+/**
+ * Calculate distance between two points
+ * @param pos1 {{x, y}}
+ * @param pos2 {{x, y}}
+ * @returns {number}
+ */
 const getDistance = function (pos1, pos2) {
   let a = pos1.x - pos2.x
   let b = pos1.y - pos2.y
@@ -17,45 +48,55 @@ const getDistance = function (pos1, pos2) {
   return Math.sqrt(a * a + b * b)
 }
 
+const invertKey = {left: 'right', right: 'left', up: 'down', down: 'up'}
+
 /**
  *
  */
-export function navDynamic (key, navTree, focusedNode) {
+export function navDynamic (key, navTree, deepestFocusedNode) {
   if (key !== 'left' && key !== 'right' && key !== 'up' && key !== 'down') return false
 
-  let focusedEl
+  let srcEl
   if (navTree.focusedNode !== null) {
-    focusedEl = navTree.nodes[navTree.focusedNode].el
-  } else if (focusedNode) {
-    focusedEl = focusedNode.el
+    srcEl = navTree.nodes[navTree.focusedNode].el
+  } else if (deepestFocusedNode) {
+    srcEl = deepestFocusedNode.el
   }
 
-  let srcPoint = {left: 'left', right: 'right', up: 'top', down: 'bottom'}
-  let dstPoint = {left: 'right', right: 'left', up: 'bottom', down: 'top'}
-
-  let point = focusedEl ? getPoint(srcPoint[key], focusedEl.getBoundingClientRect()) : {x: 0, y: 0}
+  // get src element position
+  let srcRect
+  let srcPoint
+  if (srcEl && (srcRect = getElRect(srcEl))) {
+    srcPoint = getCenterPoint(key, srcRect)
+  } else { // no element, or not visible
+    srcPoint = {x: 0, y: 0}
+  }
 
   let minDistance = null
   let minDistanceNode
 
-  // Loop over children nodes and find a node that is at minimum distance from previously focused element
+  // Loop over child nodes to find a node that is at minimum distance from previously focused element
   navTree.nodesId.forEach(id => {
-    let node = navTree.nodes[id]
-    let el = node.el
-    if (el !== focusedEl) {
-      let elPoint = getPoint(dstPoint[key], el.getBoundingClientRect())
+    let dstNode = navTree.nodes[id]
+    let dstEl = dstNode.el
+    if (dstEl === srcEl) return
 
-      if ((key === 'left' && elPoint.x > point.x) ||
-        (key === 'right' && elPoint.x < point.x) ||
-        (key === 'up' && elPoint.y > point.y) ||
-        (key === 'down' && elPoint.y < point.y)) return
+    // get dst element position
+    let dstRect = getElRect(dstEl)
+    if (!dstRect) return // element is not visible, skip
+    let dstPoint = getCenterPoint(invertKey[key], dstRect)
 
-      let distance = getDistance(point, elPoint)
+    // skip if element is beyond the scope
+    if ((key === 'left' && dstPoint.x > srcPoint.x) ||
+      (key === 'right' && dstPoint.x < srcPoint.x) ||
+      (key === 'up' && dstPoint.y > srcPoint.y) ||
+      (key === 'down' && dstPoint.y < srcPoint.y)) return
 
-      if (minDistance === null || minDistance > distance) {
-        minDistance = distance
-        minDistanceNode = node
-      }
+    let distance = getDistance(srcPoint, dstPoint)
+
+    if (minDistance === null || minDistance > distance) {
+      minDistance = distance
+      minDistanceNode = dstNode
     }
   })
 
