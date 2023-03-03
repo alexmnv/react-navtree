@@ -23,12 +23,27 @@ let config = {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }
     }),
-
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['react-navtree', 'react'],
-      minChunks: Infinity
-    })
   ],
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        common1: {
+          test: 'react',
+          chunks: 'all',
+          enforce: true
+        },
+        common2: {
+          test: 'react-navtree',
+          chunks: 'all',
+          enforce: true
+        },
+        // disables the default definition of these cache groups
+        vendors: false,
+        default: false
+      }
+    }
+  },
 
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
@@ -39,9 +54,16 @@ let config = {
   },
 
   module: {
-    loaders: [
-      { test: /\.jsx?$/, loader: 'babel-loader', exclude: '/node_modules/' },
-      { test: /\.css$/, loader: 'style-loader!css-loader' }
+    rules: [
+      { test: /\.jsx?$/, use: 'babel-loader', exclude: '/node_modules/' },
+      {
+        test: /\.css$/,
+        use: [
+            {loader: "style-loader"},
+            {loader: "css-loader"}
+        ],
+        exclude: /node_modules/
+    }
     ]
   }
 }

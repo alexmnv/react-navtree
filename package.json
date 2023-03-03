@@ -4,7 +4,8 @@
   "description": "Library for making page navigation (using keyboard or TV Remote Control in STB/ Smart TV apps) React way",
   "main": "dist/index.js",
   "dependencies": {
-    "prop-types": "^15.5.7"
+    "prop-types": "^15.5.7",
+    "uglifyjs-webpack-plugin": "^2.2.0"
   },
   "peerDependencies": {
     "react": "^18.2.0"
@@ -28,12 +29,14 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.2.1",
     "eslint-plugin-standard": "^3.0.1",
+    "gh-pages": "^5.0.0",
     "html-webpack-plugin": "^5.5.0",
     "mocha": "^10.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"
   },
   "scripts": {
