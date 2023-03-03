@@ -1,29 +1,18 @@
-import React from 'react'
+import React, { useContext, useRef, useState, memo, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import NavTree from './NavTree'
 import { navDynamic } from './NavFunctions'
 
-export default class Nav extends React.PureComponent {
-  constructor (props) {
-    super(props)
+const Nav = memo(function Nav (props) {
+  const [focused, setFocused] = useState(false)
+  let _tree = useRef(null)
 
-    this.state = {
-      focused: false
-    }
-  }
-
-  getChildContext () {
-    return {
-      tree: this.tree
-    }
-  }
-
-  componentWillMount () {
-    if (this.props.tree) { // root tree
-      this.tree = this.props.tree
-    } else if (this.context.tree) { // child tree
-      let id = this.props.navId
-      this.tree = this.context.tree.addNode(id)
+  useEffect(() => {
+    if (props.tree) {
+      _tree = props.tree
+    } else if (useContext(NavTree)) {
+      let id = props.navId
+      _tree = useContext(NavTree).addNode(id)
     } else {
       if (process.env.NODE_ENV !== 'production') {
         console.warn('No navigation tree provided. `NavTree` instance should be passed as a `tree` prop to the root (top level) `Nav` component')
@@ -31,57 +20,47 @@ export default class Nav extends React.PureComponent {
       return
     }
 
-    this.tree.resolveFunc = this.resolveFunc.bind(this)
-    this.tree.onNavCallback = this.onNav.bind(this)
+    _tree.resolveFunc = resolveFunc.bind(this)
+    _tree.onNavCallback = _onNav.bind(this)
 
-    if (this.props.defaultFocused) {
-      this.tree.focus()
+    if (props.defaultFocused) {
+      _tree.focus()
     }
-  }
 
-  componentWillUnmount () {
-    if (this.tree.parent) {
-      this.tree.parent.removeNode(this.tree.id)
+    return () => {
+      if (_tree.parent) {
+        _tree.parent.removeNode(_tree.id)
+      }
     }
-  }
+  }, [])
 
-  resolveFunc (event, navTree, focusedNode) {
-    if (!this.props.func) {
+  const resolveFunc = (event, navTree, focusedNode) => {
+    if (!props.func) {
       if (navTree.nodesId.length > 1) return navDynamic(event, navTree, focusedNode)
-      else return this.state.focused ? false : (navTree.nodesId.length > 0 ? navTree.nodesId[0] : null)
+      else return focused ? false : (navTree.nodesId.length > 0 ? navTree.nodesId[0] : null)
     } else {
-      return this.props.func(event, navTree, focusedNode)
+      return props.func(event, navTree, focusedNode)
     }
   }
 
-  onNav (path) {
-    this.setState({
-      focused: path !== false
-    })
+  const _onNav = (path) => {
+    setFocused(path !== false)
 
-    if (this.props.onNav) {
-      this.props.onNav(path)
+    if (props.onNav) {
+      props.onNav(path)
     }
   }
 
-  render () {
-    let {component, children, className, focusedClass, tree, navId, func, onNav, defaultFocused, ...restProps} = this.props
-    let Component = component || this.constructor.defaultComponent
+  let {component: Component, children, className, focusedClass, tree, navId, func, onNav, defaultFocused, ...restProps} = props
 
-    if (this.state.focused) {
-      if (focusedClass === undefined) focusedClass = this.constructor.defaultFocusedClass
-      className = (className || '') + ' ' + focusedClass
-    }
-
-    return (
-      <Component ref={ref => { if (this.tree) this.tree.el = ref }} className={className} {...restProps}>{children}</Component>
-    )
+  if (focused) {
+    className += ' ' + focusedClass
   }
-}
 
-Nav.defaultComponent = 'div'
-
-Nav.defaultFocusedClass = 'nav-focused'
+  return (
+    <Component ref={ref => { if (_tree) _tree.el = ref }} className={className} {...restProps}>{children}</Component>
+  )
+})
 
 Nav.contextTypes = {
   tree: PropTypes.instanceOf(NavTree)
@@ -102,3 +81,11 @@ Nav.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string
 }
+
+Nav.defaultProps = {
+  component: 'div',
+  focusedClass: 'nav-focused',
+  className: ''
+}
+
+export default Nav

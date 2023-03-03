@@ -3,15 +3,12 @@ import PropTypes from 'prop-types'
 import Nav, {NavTree} from 'react-navtree'
 
 export default class Modal extends Component {
-  componentWillReceiveProps (nextProps) {
+  componentDidUpdate (prevProps) {
     // before show:
     // remember focused path (in order to restore it when the modal is closed)
-    if (!this.props.show && nextProps.show) {
+    if (!prevProps.show && this.props.show) {
       this.previouslyFocusedPath = this.context.tree.getFocusedPath()
     }
-  }
-
-  componentDidUpdate (prevProps) {
     // after close: restore focus
     if (prevProps.show && !this.props.show) {
       this.context.tree.focus(this.previouslyFocusedPath)

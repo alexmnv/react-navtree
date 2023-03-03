@@ -3,5 +3,6 @@ module.exports = {
   "plugins": [
       "standard",
       "react"
-  ]
+  ],
+  "parser": "@babel/eslint-parser"
 };
