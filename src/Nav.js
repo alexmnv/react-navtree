@@ -1,18 +1,19 @@
-import React, { useContext, useRef, useState, memo, useEffect } from 'react'
+import React, { useContext, useRef, useState, memo, useEffect, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import NavTree from './NavTree'
 import { navDynamic } from './NavFunctions'
 
-const Nav = memo(function Nav (props) {
+const Nav = forwardRef(function Nav (props, ref) {
   const [focused, setFocused] = useState(false)
   let _tree = useRef(null)
+  const navTree = useContext(NavTree)
 
   useEffect(() => {
     if (props.tree) {
       _tree = props.tree
-    } else if (useContext(NavTree)) {
+    } else if (navTree) {
       let id = props.navId
-      _tree = useContext(NavTree).addNode(id)
+      _tree = navTree.addNode(id)
     } else {
       if (process.env.NODE_ENV !== 'production') {
         console.warn('No navigation tree provided. `NavTree` instance should be passed as a `tree` prop to the root (top level) `Nav` component')
@@ -58,7 +59,10 @@ const Nav = memo(function Nav (props) {
   }
 
   return (
-    <Component ref={ref => { if (_tree) _tree.el = ref }} className={className} {...restProps}>{children}</Component>
+    <Component ref={innerRef => {
+      ref = innerRef
+      if (_tree) _tree.el = innerRef
+    }} className={className} {...restProps}>{children}</Component>
   )
 })
 
@@ -88,4 +92,4 @@ Nav.defaultProps = {
   className: ''
 }
 
-export default Nav
+export default memo(Nav)

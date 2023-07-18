@@ -22,7 +22,7 @@ let config = {
       'process.env': {
         NODE_ENV: JSON.stringify(NODE_ENV)
       }
-    }),
+    })
   ],
 
   optimization: {
@@ -59,11 +59,11 @@ let config = {
       {
         test: /\.css$/,
         use: [
-            {loader: "style-loader"},
-            {loader: "css-loader"}
+          {loader: 'style-loader'},
+          {loader: 'css-loader'}
         ],
         exclude: /node_modules/
-    }
+      }
     ]
   }
 }
@@ -98,12 +98,10 @@ Object.keys(examples).forEach((exampleName) => {
 })
 
 if (NODE_ENV === 'production') {
-  config.optimization.push({
-    minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-    ],
-  })
+  config.optimization['minimize'] = true
+  config.optimization['minimizer'] = [
+    new TerserPlugin()
+  ]
 }
 
 module.exports = config
