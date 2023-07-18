@@ -59,7 +59,8 @@
     "build": "babel src --out-dir dist",
     "build-examples-dev": "NODE_ENV=development webpack --config examples/webpack.config.js",
     "build-examples-prod": "NODE_ENV=production webpack --config examples/webpack.config.js",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
