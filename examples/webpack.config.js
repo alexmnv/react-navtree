@@ -1,6 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const path = require('path')
 const NODE_ENV = (process.env.NODE_ENV && process.env.NODE_ENV.trim()) || 'development'
 const examples = require('./examples.json')
@@ -98,7 +98,12 @@ Object.keys(examples).forEach((exampleName) => {
 })
 
 if (NODE_ENV === 'production') {
-  config.plugins.push(new UglifyJSPlugin())
+  config.optimization.push({
+    minimize: true,
+    minimizer: [
+      new TerserPlugin(),
+    ],
+  })
 }
 
 module.exports = config
